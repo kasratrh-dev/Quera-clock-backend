@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'apps.users.apps.UsersConfig',
     'apps.workspaces.apps.WorkspacesConfig',
+    'apps.clients.apps.ClientsConfig',
 
 ]
 
