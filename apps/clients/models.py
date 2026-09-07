@@ -9,7 +9,7 @@ class Client(TimestampedModel):
     name = models.CharField(max_length=255)
     email = models.EmailField(blank=True)
     notes = models.TextField(blank=True)
-    thumbnail = models.ImageField(upload_to='clients/',blank=True)
+    thumbnail = models.ImageField(upload_to='clients/',blank=True ,null=True)
 
 
     class Meta:
