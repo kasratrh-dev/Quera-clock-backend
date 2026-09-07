@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'apps.users.apps.UsersConfig',
     'apps.workspaces.apps.WorkspacesConfig',
     'apps.clients.apps.ClientsConfig',
+    'apps.projects.apps.ProjectsConfig',
 
 ]
 
