@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'apps.clients.apps.ClientsConfig',
     'apps.projects.apps.ProjectsConfig',
     'apps.tags.apps.TagsConfig',
+    'apps.time_entries.apps.TimeEntriesConfig',
 
 ]
 
