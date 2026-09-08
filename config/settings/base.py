@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'apps.workspaces.apps.WorkspacesConfig',
     'apps.clients.apps.ClientsConfig',
     'apps.projects.apps.ProjectsConfig',
+    'apps.tags.apps.TagsConfig',
 
 ]
 
