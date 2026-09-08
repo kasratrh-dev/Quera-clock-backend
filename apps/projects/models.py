@@ -1,8 +1,23 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-from core.models import TimestampedModel
+from core.models.base import TimestampedModel, SoftDeleteQuerySet, SoftDeleteManager
 from apps.workspaces.models import Workspace
 from apps.clients.models import Client
+
+
+class ProjectQuerySet(SoftDeleteQuerySet):
+    def visible_to(self, user):
+        if not user.is_authenticated:
+            return self.none()
+
+        return self.filter(
+            workspace__memberships__user=user,
+            workspace__memberships__is_active=True,
+            workspace__memberships__deleted_at__isnull=True,
+        ).distinct()
+
+    def not_archived(self):
+        return self.filter(is_archived=False)
 
 
 class Project(TimestampedModel):
@@ -26,6 +41,8 @@ class Project(TimestampedModel):
             raise ValidationError(
                 "Client must belong to the same workspace."
             )
+
+    objects = SoftDeleteManager.from_queryset(ProjectQuerySet)()
 
     def __str__(self):
         return self.name

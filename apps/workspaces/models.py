@@ -1,10 +1,31 @@
 from django.conf import settings
 from django.db import models
 
-from core.models import TimestampedModel
+from core.models.base import TimestampedModel, SoftDeleteQuerySet, SoftDeleteManager
 
 
 # Create your models here.
+class WorkspaceQuerySet(SoftDeleteQuerySet):
+    def visible_to(self, user):
+        if not user.is_authenticated:
+            return self.none()
+
+        return self.filter(
+            memberships__user=user,
+            memberships__is_active=True,
+            memberships__deleted_at__isnull=True,
+        ).distinct()
+
+
+class WorkspaceMembershipQuerySet(SoftDeleteQuerySet):
+    def enabled(self):
+        return self.filter(
+            is_active=True,
+            deleted_at__isnull=True,
+        )
+
+    def for_user(self, user):
+        return self.enabled().filter(user=user)
 
 
 class Workspace(TimestampedModel):
@@ -22,6 +43,8 @@ class Workspace(TimestampedModel):
                 name="unique_workspace_name_per_owner",
             )
         ]
+
+    objects = SoftDeleteManager.from_queryset(WorkspaceQuerySet)()
 
     def __str__(self):
         return self.name
@@ -49,6 +72,7 @@ class WorkspaceMembership(TimestampedModel):
     is_active = models.BooleanField(default=True)
     joined_at = models.DateTimeField(auto_now_add=True)
 
+    objects = SoftDeleteManager.from_queryset(WorkspaceMembershipQuerySet)()
 
     def __str__(self):
         return f'{self.user} - {self.workspace}'

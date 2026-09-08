@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-from core.models import TimestampedModel
+from core.models.base import TimestampedModel, SoftDeleteQuerySet, SoftDeleteManager
 from apps.workspaces.models import Workspace
 from django.conf import settings
 from apps.projects.models import Project
@@ -9,14 +9,19 @@ from django.utils import timezone
 from datetime import timedelta
 
 
-class TimeEntryQuerySet(models.QuerySet):
+class TimeEntryQuerySet(SoftDeleteQuerySet):
+    def visible_to(self, user):
+        if not user.is_authenticated:
+            return self.none()
+
+        return self.filter(user=user)
+
     def running(self):
         return self.filter(end_time__isnull=True)
 
 
 class TimeEntry(TimestampedModel):
-    objects = TimeEntryQuerySet.as_manager()
-
+    objects = SoftDeleteManager.from_queryset(TimeEntryQuerySet)()
     workspace = models.ForeignKey(
         Workspace,
         on_delete=models.CASCADE,
