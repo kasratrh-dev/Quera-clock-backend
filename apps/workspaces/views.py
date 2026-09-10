@@ -1,5 +1,7 @@
 from email import message
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count
 from django.views.generic import TemplateView, FormView
 from django.contrib import messages
 
@@ -48,3 +50,28 @@ class AboutView(FormView):
         form.save()
         messages.success(self.request, "Your message has been sent successfully.")
         return super().form_valid(form)
+
+
+class DashboardPreviewView(LoginRequiredMixin, TemplateView):
+    template_name = "pages/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["workspaces"] = (
+            Workspace.objects
+            .visible_to(self.request.user)
+            .annotate(membership_count=Count("memberships"))
+        )
+
+        user_entries = TimeEntry.objects.visible_to(self.request.user)
+
+        context["running_timer_count"] = user_entries.running().count()
+
+        context["recent_entries"] = (
+            user_entries
+            .select_related("project", "workspace")
+            .order_by("-created_at")[:5]
+        )
+
+        return context
