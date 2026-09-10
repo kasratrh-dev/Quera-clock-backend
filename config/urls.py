@@ -7,6 +7,7 @@ urlpatterns = [
     # COURSE_TODO: add the admin route.
     path('admin/', admin.site.urls),
     path("", include("apps.workspaces.urls")),
+    path('auth/', include('apps.users.urls')),
 
 ]
 

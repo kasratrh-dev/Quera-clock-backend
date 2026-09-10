@@ -96,3 +96,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 # COURSE_TODO: configure static and media files for local development.
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+LOGIN_URL = "users:login"
+LOGIN_REDIRECT_URL = "users:profile"
+LOGOUT_REDIRECT_URL = "workspaces:landing"
