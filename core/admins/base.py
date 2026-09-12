@@ -1,9 +1,12 @@
 from django.contrib import admin, messages
-
+from unfold.admin import ModelAdmin
 from core.admins.filters import SoftDeleteListFilter
 
 
-class SoftDeleteAdmin(admin.ModelAdmin):
+
+
+
+class SoftDeleteAdmin(ModelAdmin):
     actions = ("soft_delete_selected", "restore_selected", "hard_delete_selected")
 
     def get_queryset(self, request):
@@ -42,3 +45,7 @@ class SoftDeleteAdmin(admin.ModelAdmin):
         count = queryset.count()
         queryset.hard_delete()
         self.message_user(request, f"{count} record(s) permanently deleted.", messages.WARNING)
+
+
+
+

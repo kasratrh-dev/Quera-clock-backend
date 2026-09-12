@@ -19,6 +19,7 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
+    'unfold',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -38,6 +39,12 @@ INSTALLED_APPS = [
     'apps.contact_notes.apps.ContactNotesConfig',
 
 ]
+
+UNFOLD = {
+    "SITE_TITLE": "Quera Clock Admin",
+    "SITE_HEADER": "Quera Clock",
+    "SITE_SUBHEADER": "Time tracking administration",
+}
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
